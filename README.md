@@ -14,11 +14,11 @@ Minimal password hashing for Python.
 
 - Password hashing and verification  
 - Safe default parameters  
-- Simple, typed API    
+- Simple, typed API
+- Relies on battle-tested implementation of the hashers
 
 ---
 
 ## Installation
 
-```bash
-pip install phsh
+N/A
