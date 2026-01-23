@@ -1,2 +1,24 @@
+<p align="center">
+  <img src="assets/ascii-art-text.png" width="200" />
+</p>
+
 # phsh
-Lightweight password hashing utilities for Python
+
+Minimal password hashing for Python.
+
+`phsh` provides a small, clean API for hashing and verifying passwords using Argon2 and Bcrypt with safe defaults and minimal dependencies.
+
+---
+
+## Features
+
+- Password hashing and verification  
+- Safe default parameters  
+- Simple, typed API    
+
+---
+
+## Installation
+
+```bash
+pip install phsh
