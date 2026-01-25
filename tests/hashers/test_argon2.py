@@ -30,23 +30,19 @@ _HASHED_PASSWORD_BYTES = _HASHED_PASSWORD_STR.encode("utf-8")
 
 ARGON2ID_HASH_STR: str = "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$DiiHO0rCXPTKaM13maegC1EENKvH9ngVscuuwsR1Eko"
 
-
 @pytest.fixture
 def argon2() -> Argon2Hasher:
     return Argon2Hasher()
-
 
 def test_hash(argon2: Argon2Hasher) -> None:
     hashed = argon2.hash(_PASSWORD)
     assert isinstance(hashed, str)
 
-
 @pytest.mark.parametrize(
     "hash,password,result",
     [
-        (_HASHED_PASSWORD_STR, _PASSWORD, True)(
-            _HASHED_PASSWORD_STR, "INCORRECTPASSWORD", False
-        )
+        (_HASHED_PASSWORD_STR, _PASSWORD, True),
+        (_HASHED_PASSWORD_STR, "INCORRECTPASSWORD", False),
     ],
 )
 def test_verify(
