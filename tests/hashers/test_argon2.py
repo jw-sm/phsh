@@ -1,9 +1,10 @@
 import pytest
+from phsh.hashers.argon2 import Argon2 
 
 
 _PASSWORD = "phsh_hashing_util"
-_HASH = Argon2Hasher()
-_HASHED_PASSWORD_STR = Argon2Hasher.hash(_PASSWORD)
+_HASH = Argon2()
+_HASHED_PASSWORD_STR = _HASH.hash(_PASSWORD)
 _HASHED_PASSWORD_BYTES = _HASHED_PASSWORD_STR.encode("utf-8")
 
 # Note: This was generated using the C reference
@@ -31,21 +32,33 @@ _HASHED_PASSWORD_BYTES = _HASHED_PASSWORD_STR.encode("utf-8")
 ARGON2ID_HASH_STR: str = "$argon2id$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$DiiHO0rCXPTKaM13maegC1EENKvH9ngVscuuwsR1Eko"
 
 @pytest.fixture
-def argon2() -> Argon2Hasher:
-    return Argon2Hasher()
+def argon2() -> Argon2:
+    return Argon2()
 
-def test_hash(argon2: Argon2Hasher) -> None:
-    hashed = argon2.hash(_PASSWORD)
+@pytest.mark.parametrize(
+    "password",
+    [
+        pytest.param(_PASSWORD, id="standard_password"),
+        pytest.param("", id="empty_password"),
+        pytest.param("a" * 100, id="long_password"),
+    ],
+)
+
+def test_hash(password: str, argon2: Argon2Hasher) -> None:
+    print(f"\n→ Hashing: '{password[:20]}...'")
+    hashed = argon2.hash(password)
+    print(f"→ Result: {hashed}...")
     assert isinstance(hashed, str)
 
 @pytest.mark.parametrize(
     "hash,password,result",
     [
-        (_HASHED_PASSWORD_STR, _PASSWORD, True),
-        (_HASHED_PASSWORD_STR, "INCORRECTPASSWORD", False),
+        pytest.param(_HASHED_PASSWORD_STR, _PASSWORD, True, id="correct_password"),
+        pytest.param(_HASHED_PASSWORD_STR, "INCORRECTPASSWORD", False, id="incorrect_password"),
     ],
 )
 def test_verify(
     hash: str | bytes, password: str, result: bool, argon2: Argon2Hasher
 ) -> None:
+    print(f"\n→ Verifying: hash={hash[:20]}... password='{password}' expected={result}")
     assert argon2.verify(hash, password) == result
