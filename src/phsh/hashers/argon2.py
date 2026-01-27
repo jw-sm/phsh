@@ -1,14 +1,14 @@
 try:
     import argon2.exceptions
     from argon2 import PasswordHasher
-    from low_level import Type
+    from argon2.low_level import Type
 except ImportError as e:
     from ..exceptions import HasherNotFound
 
     raise HasherNotFound("argon2") from e
 
 from .protocol import HasherProtocol
-from typing import ClassVar, Type
+from typing import ClassVar
 
 
 def _validate_str_or_bytes(s: str | bytes) -> None:
@@ -52,32 +52,9 @@ class Argon2(HasherProtocol):
 
     @classmethod
     def identify(cls, hash: str | bytes) -> bool:
-        """
-        Determine the variant of the given hash. (Argon2i, Argon2d, or Argon2id).
-        This should not be used to validate the entire hash structure or if the hash is properly formed beyond
-        checking the variant
-
-        Args:
-            hash: str or bytes to examine, if str, it will be converted to bytes using UTF-8 encoding
-
-        Raises:
-            UnicodeDecodeError:
-                If hash is not str or byte.
-
-        Returns:
-            True if the extracted variant from the hash is valid, False otherwise.
-
-        Examples:
-            >>> Argon2Hasher.identify('$argon2id$v=19$m=65536,t=3,p=4$...')
-            True
-            >>> Argon2Hasher.identify('$2b$12$...')  #bcrypt hash
-            False
-            >>> Argon2Hasher.identify('not a hash')
-            False
-        """
         try:
             h = _require_bytes(hash)
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, AttributeError, UnicodeEncodeError):
             return False
 
         for header in cls._header_to_variant.keys():
