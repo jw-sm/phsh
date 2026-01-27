@@ -62,3 +62,15 @@ def test_verify(
 ) -> None:
     print(f"\n→ Verifying: hash={hash[:20]!r}... password='{password}' expected={result}")
     assert argon2.verify(hash, password) == result
+
+
+@pytest.mark.parametrize(
+    "hash,result",
+    [
+        pytest.param(_HASHED_PASSWORD_STR, True, id="valid_variant"),
+        pytest.param("$argon2xx$v=19$m=65536,t=3,p=4$c29tZXNhbHQ$DiiHO0rCXPTKaM13maegC1EENKvH9ngVscuuwsR1Eko", False, id="invalid_variant"),
+        pytest.param(67, False, id="invalid_type"),
+    ]
+)
+def test_identify(hash: str | bytes, result: bool) -> None:
+    assert Argon2.identify(hash) == result
