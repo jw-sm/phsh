@@ -1,12 +1,14 @@
 try:
     import argon2.exceptions
     from argon2 import PasswordHasher
+    from low_level import Type
 except ImportError as e:
     from ..exceptions import HasherNotFound
 
     raise HasherNotFound("argon2") from e
 
 from .protocol import HasherProtocol
+from typing import ClassVar, Type
 
 
 def _validate_str_or_bytes(s: str | bytes) -> None:
@@ -14,8 +16,12 @@ def _validate_str_or_bytes(s: str | bytes) -> None:
         raise TypeError(f"{type(s).__name__} must be str or bytes")
 
 
-def _require_str(s: str | bytes) -> str:
-    return s if isintance(s, str) else s.decode()
+def _require_str(s: str | bytes, *, encoding: str = "utf-8") -> str:
+    return s if isinstance(s, str) else s.decode(encoding)
+
+
+def _require_bytes(s: str | bytes, *, encoding: str = "utf-8") -> bytes:
+    return s if isinstance(s, bytes) else s.encode(encoding)
 
 
 class Argon2(HasherProtocol):
@@ -47,16 +53,19 @@ class Argon2(HasherProtocol):
     @classmethod
     def identify(cls, hash: str | bytes) -> bool:
         """
-        Determine whether a given hash string is a valid Argon2 hash.
-        This examines the hash header and if it matches any known variants (Argon2i, Argon2d, or Argon2id).
-        This should not be used to validate the entire hash structure or the hash is properly formed beyond
+        Determine the variant of the given hash. (Argon2i, Argon2d, or Argon2id).
+        This should not be used to validate the entire hash structure or if the hash is properly formed beyond
         checking the variant
 
         Args:
             hash: str or bytes to examine, if str, it will be converted to bytes using UTF-8 encoding
 
+        Raises:
+            UnicodeDecodeError:
+                If hash is not str or byte.
+
         Returns:
-            True if hash appears to be a valid Argon2 hash based on its header/variant, False otherwise.
+            True if the extracted variant from the hash is valid, False otherwise.
 
         Examples:
             >>> Argon2Hasher.identify('$argon2id$v=19$m=65536,t=3,p=4$...')
@@ -67,18 +76,17 @@ class Argon2(HasherProtocol):
             False
         """
         try:
-            h = _require_str(hash)
+            h = _require_bytes(hash)
         except UnicodeDecodeError:
             return False
 
         for header in cls._header_to_variant.keys():
             if h.startswith(header):
                 return True
-
         return False
 
     def hash(self, password: str | bytes) -> str:
-        _validate_str_or_bytes(s)
+        _validate_str_or_bytes(password)
         return self._hasher.hash(password)
 
     def verify(self, password: str | bytes, hash: str | bytes) -> bool:
@@ -92,3 +100,6 @@ class Argon2(HasherProtocol):
             argon2.exceptions.InvalidHashError,
         ):
             return False
+
+    def needs_rehash(self, hash: str | bytes) -> bool:
+        return self._hasher.check_needs_rehash(_require_bytes(hash))

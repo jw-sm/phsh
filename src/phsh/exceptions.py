@@ -1,0 +1,2 @@
+class HasherNotFound(Exception):
+    pass

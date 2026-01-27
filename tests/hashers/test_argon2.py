@@ -44,7 +44,7 @@ def argon2() -> Argon2:
     ],
 )
 
-def test_hash(password: str, argon2: Argon2Hasher) -> None:
+def test_hash(password: str, argon2: Argon2) -> None:
     print(f"\n→ Hashing: '{password[:20]}...'")
     hashed = argon2.hash(password)
     print(f"→ Result: {hashed}...")
@@ -58,7 +58,7 @@ def test_hash(password: str, argon2: Argon2Hasher) -> None:
     ],
 )
 def test_verify(
-    hash: str | bytes, password: str, result: bool, argon2: Argon2Hasher
+    hash: str | bytes, password: str, result: bool, argon2: Argon2
 ) -> None:
-    print(f"\n→ Verifying: hash={hash[:20]}... password='{password}' expected={result}")
+    print(f"\n→ Verifying: hash={hash[:20]!r}... password='{password}' expected={result}")
     assert argon2.verify(hash, password) == result
