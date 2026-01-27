@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/ascii-art-text.png" width="200" />
+  <img src="assets/phsh.svg" width="200" />
 </p>
 
 # phsh
