@@ -25,7 +25,7 @@ jobs:
     
     # -e flag installs in editable mode, like local
     - name: Install dependencies
-      run: uv pip install --system -e .
+      run: uv pip install --system -e ".[dev]" 
     
     - name: Run tests with pytest
       run: uv run pytest tests/ -v
