@@ -1,9 +1,11 @@
 <p align="center">
   <img src="assets/phsh.svg" width="200" />
 </p>
-
 # phsh
 
+[![Tests](https://github.com/jw-sm/phsh/actions/workflows/test.yml/badge.svg)](https://github.com/jw-sm/phsh/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/jw-sm/phsh/branch/main/graph/badge.svg)](https://codecov.io/gh/jw-sm/phsh)
+---
 Minimal password hashing for Python.
 
 `phsh` provides a small, clean API for hashing and verifying passwords using Argon2 and Bcrypt with safe defaults and minimal dependencies.
