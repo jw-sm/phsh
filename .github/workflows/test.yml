@@ -29,3 +29,6 @@ jobs:
     
     - name: Run tests with pytest
       run: uv run pytest tests/ -v
+
+    - name: Run mypy
+      run: uv run mypy src/phsh
