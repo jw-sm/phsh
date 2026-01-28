@@ -21,6 +21,7 @@ all = ["argon2-cffi >=23.1.0,<26", "bcrypt >=4.1.2,<6"]
 dev = [
     "pytest>=8.0.0",
     "mypy>=1.0.0",
+    "pytest-cov>=4.0.0",
 ]
 
 [tool.setuptools]
