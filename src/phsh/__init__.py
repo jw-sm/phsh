@@ -1,7 +1,7 @@
-# "Password Hasher for Python"
+"Password Hasher for Python"
 
-# __version__ = "0.1.0"
+__version__ = "0.1.0"
 
-# from ._hash import Hasher
+from ._hash import Hasher
 
-# __all__ = ["Hasher"]
+__all__ = ["Hasher", "protocol"]
