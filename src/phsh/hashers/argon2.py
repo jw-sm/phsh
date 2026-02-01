@@ -9,19 +9,7 @@ except ImportError as e:
 
 from .protocol import HasherProtocol
 from typing import ClassVar
-
-
-def _validate_str_or_bytes(s: str | bytes) -> None:
-    if not isinstance(s, (str, bytes)):
-        raise TypeError(f"{type(s).__name__} must be str or bytes")
-
-
-def _require_str(s: str | bytes, *, encoding: str = "utf-8") -> str:
-    return s if isinstance(s, str) else s.decode(encoding)
-
-
-def _require_bytes(s: str | bytes, *, encoding: str = "utf-8") -> bytes:
-    return s if isinstance(s, bytes) else s.encode(encoding)
+from .util import _validate_str_or_bytes, _require_bytes
 
 
 class Argon2(HasherProtocol):
@@ -62,7 +50,7 @@ class Argon2(HasherProtocol):
                 return True
         return False
 
-    def hash(self, password: str | bytes) -> str:
+    def hash(self, password: str | bytes, *, salt: bytes | None = None) -> str:
         _validate_str_or_bytes(password)
         return self._hasher.hash(password)
 
