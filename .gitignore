@@ -1,10 +1,73 @@
+#runtime and bytecode
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-dist/
+*.py[cod]
+*$py.class
+
+#type checker, linter, formatter
+.mypy_cache/
+.dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+.flake8
+
+#testing&coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+
+#venv
+.venv/
+venv/
+env/
+ENV/
+.venv/ #for uv
+
+#packaging and build artifacts
 build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+#secrets
 .env
-notes.txt
+.env.*
+!.env.example
+
+#docker
+.dockerignore
+docker-compose.override.yml
+
+#log and runtime files
+*.log
+logs/
+*.pid
+*.sock
+
+#db and local state
+*.sqlite
+*.sqlite3
+*.db
+.db/
+
+#dp manager
+pip-log.txt
+pip-delete-this-directory.txt
+
+#macos shits
+.DS_Store
+.AppleDouble
+.LSOverride
+
+
+#sec/infra
+*.pem
+*.key
+*.crt
+secrets/
 
